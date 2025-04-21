@@ -3,7 +3,7 @@ import axios from "axios";
 import "./App.css";
 
 
-const API_URL = import.meta.env.VITE_API_URL "https://todo-fastapi-sjxd.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onrender.com/todos/";
 
 export default function TodoList() {
   const [tasks, setTasks] = useState([]);
