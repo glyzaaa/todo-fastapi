@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
+import TodoList from "./TodoList";
 
 // Use the correct base URL (with /todos/ at the end)
-const API_URL = "https://todo-fastapi-sjxd.onrender.com/todos/";
+const API_URL = "https://todo-fastapi-sjxd.onrender.com";
 
 export default function TodoList() {
   const [tasks, setTasks] = useState([]);
