@@ -5,6 +5,26 @@
   text-align: center;
 }
 
+body.light {
+  background-color: #f4f4f4;
+  color: #111;
+}
+
+body.dark {
+  background-color: #121212;
+  color: #fff;
+}
+
+.theme-toggle {
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  border: 2px solid currentColor;
+  background-color: transparent;
+  color: inherit;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

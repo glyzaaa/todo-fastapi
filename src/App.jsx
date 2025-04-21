@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import TodoList from "./components/TodoList";
 import AddTodo from "./components/AddTodo";
 import FilterButtons from "./components/FilterButtons";
+import ThemeToggle from "./components/ThemeToggle"; // ✅ Move import here
 import { getTodos } from "./api";
 import "./App.css";
 
@@ -13,7 +14,7 @@ function App() {
 
   useEffect(() => {
     document.body.className = theme;
-    localStorage.setItem("theme", theme);5
+    localStorage.setItem("theme", theme);
   }, [theme]);
 
   useEffect(() => {
@@ -37,12 +38,7 @@ function App() {
 
   return (
     <div className="app">
-      <button
-        onClick={() => setTheme((prev) => (prev === "light" ? "dark" : "light"))}
-        className="theme-toggle"
-      >
-        Switch to {theme === "light" ? "Dark" : "Light"} Mode
-      </button>
+      <ThemeToggle theme={theme} setTheme={setTheme} /> 
 
       <h1>To-Do List</h1>
       <AddTodo onAdd={(newTodo) => setTodos([...todos, newTodo])} />
