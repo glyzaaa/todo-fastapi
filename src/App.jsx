@@ -10,7 +10,11 @@ function App() {
     const fetchTasks = async () => {
       try {
         const response = await axios.get(API_URL);
-        setTasks(response.data);
+        if (Array.isArray(response.data)) {
+          setTasks(response.data);
+        } else {
+          console.error("Expected array but got:", response.data);
+        }
       } catch (error) {
         console.error("Error fetching tasks:", error.message);
       }
@@ -27,9 +31,18 @@ function App() {
     }
   };
 
+  const deleteTask = async (id) => {
+    try {
+      await axios.delete(`${API_URL}${id}/`);
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+    } catch (error) {
+      console.error("Error deleting task:", error.message);
+    }
+  };
+
   return (
     <div className="app-container">
-      <TodoList tasks={tasks} onAdd={addTask} />
+      <TodoList tasks={tasks} onAdd={addTask} onDelete={deleteTask} />
     </div>
   );
 }

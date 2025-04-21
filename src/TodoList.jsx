@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 
-export default function TodoList({ tasks, onAdd }) {
+export default function TodoList({ tasks, onAdd, onDelete }) {
   const [task, setTask] = useState("");
 
   const handleAdd = () => {
@@ -21,9 +21,9 @@ export default function TodoList({ tasks, onAdd }) {
       <button onClick={handleAdd}>Add Task</button>
       <ul>
         {tasks.map((t) => (
-          <li key={t.id}>{t.title}</li>
+          <li key={t.id}>
+            {t.title}
+            <button onClick={() => onDelete(t.id)}>❌</button>
+          </li>
         ))}
       </ul>
-    </div>
-  );
-}
