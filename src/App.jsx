@@ -4,9 +4,8 @@ import TodoList from "./TodoList";
 
 function App() {
   const [tasks, setTasks] = useState([]);
-  const API_URL = "https://todo-fastapi-sjxd.onrender.com/";
+  const API_URL = "https://todo-fastapi-sjxd.onrender.com/todos/";
 
-  // Fetch tasks from the backend
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -19,7 +18,6 @@ function App() {
     fetchTasks();
   }, []);
 
-  // Add a new task
   const addTask = async (newTask) => {
     try {
       const response = await axios.post(API_URL, newTask);
@@ -29,37 +27,9 @@ function App() {
     }
   };
 
-  // Update an existing task
-  const updateTask = async (id, updatedTask) => {
-    try {
-      const response = await axios.put(`${API_URL}${id}/`, updatedTask);
-      setTasks((prevTasks) =>
-        prevTasks.map((task) => (task.id === id ? response.data : task))
-      );
-    } catch (error) {
-      console.error("Error updating task:", error.message);
-    }
-  };
-
-  // Delete a task
-  const deleteTask = async (id) => {
-    try {
-      await axios.delete(`${API_URL}${id}/`);
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-    } catch (error) {
-      console.error("Error deleting task:", error.message);
-    }
-  };
-
   return (
     <div className="app-container">
-      <h1>React TODO App</h1>
-      <TodoList
-        tasks={tasks}
-        onAdd={addTask}
-        onUpdate={updateTask}
-        onDelete={deleteTask}
-      />
+      <TodoList tasks={tasks} onAdd={addTask} />
     </div>
   );
 }
