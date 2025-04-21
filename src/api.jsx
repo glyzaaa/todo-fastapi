@@ -3,7 +3,7 @@ const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onren
 export const getTodos = async (completed) => {
   let url = `${API_URL}/todos`;
   if (completed !== undefined) url += `?completed=${completed}`;
-  
+
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -13,7 +13,7 @@ export const getTodos = async (completed) => {
     return await response.json();
   } catch (error) {
     console.error("Error fetching todos:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -33,7 +33,7 @@ export const createTodo = async (title) => {
     return await response.json();
   } catch (error) {
     console.error("Error in createTodo:", error);
-    throw error; y
+    throw error;
   }
 };
 
@@ -53,13 +53,15 @@ export const updateTodo = async (id, updates) => {
     return await response.json();
   } catch (error) {
     console.error("Error updating todo:", error);
-    throw error; /
+    throw error;
   }
 };
 
 export const deleteTodo = async (id) => {
   try {
-    const response = await fetch(`${API_URL}/todos/${id}`, { method: "DELETE" });
+    const response = await fetch(`${API_URL}/todos/${id}`, {
+      method: "DELETE",
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -69,5 +71,6 @@ export const deleteTodo = async (id) => {
     return await response.json();
   } catch (error) {
     console.error("Error deleting todo:", error);
-    throw error; 
+    throw error;
   }
+};

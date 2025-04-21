@@ -11,6 +11,8 @@ function App() {
   const [theme, setTheme] = useState("light");
   const [newTask, setNewTask] = useState({ title: "", description: "" });
 
+axios.get("https://todo-fastapi-sjxd.onrender.com/todos")
+
   useEffect(() => {
     axios
       .get(BASE_URL)
