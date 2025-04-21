@@ -3,7 +3,7 @@ import axios from "axios";
 import "./App.css";
 
 
-const API_URL = "https://todo-fastapi-sjxd.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onrender.com";
 
 export default function TodoList() {
   const [tasks, setTasks] = useState([]);
@@ -38,13 +38,13 @@ export default function TodoList() {
     if (task.trim() === "") return;
     try {
       const newTask = { title: task, completed: false };
-      const response = await axios.post(API_URL, newTask);
-      setTasks([...tasks, response.data]);
-      setTask("");
+      const response = await axios.post(`${API_URL}/todos/`, newTask);
+      setTasks([...tasks, response.data]);  // Adding the new task to the state
+      setTask("");  // Resetting input field after adding the task
     } catch (error) {
       console.error("Error adding task:", error);
     }
-  };
+  };  
 
   const removeTask = async (id) => {
     try {
