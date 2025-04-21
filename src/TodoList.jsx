@@ -17,15 +17,16 @@ export default function TodoList() {
     const fetchTasks = async () => {
       try {
         const response = await axios.get(API_URL);
-        console.log('Fetched tasks:', response.data); // Add logging to debug
+        console.log('Fetched tasks:', response.data);  // Check if data is fetched correctly
         setTasks(response.data);
       } catch (error) {
         console.error("Error fetching tasks:", error);
+        alert("Failed to fetch tasks. Please check the API.");
       }
     };
     fetchTasks();
   }, []);
-
+  
   useEffect(() => {
     document.body.classList.toggle("dark", darkMode);
     localStorage.setItem("theme", darkMode ? "dark" : "light");
@@ -129,34 +130,38 @@ export default function TodoList() {
       </div>
 
       <ul className="task-list">
-        {filteredTasks.map((task) => (
-          <li key={task.id} className={`task-item ${task.completed ? "completed" : ""}`}>
+  {tasks.length === 0 ? (
+    <li>No tasks available.</li>  // Display this if no tasks are available
+  ) : (
+    filteredTasks.map((task) => (
+      <li key={task.id} className={`task-item ${task.completed ? "completed" : ""}`}>
+        <input
+          type="checkbox"
+          checked={task.completed}
+          onChange={() => toggleCompletion(task.id)}
+        />
+        {editingId === task.id ? (
+          <>
             <input
-              type="checkbox"
-              checked={task.completed}
-              onChange={() => toggleCompletion(task.id)}
+              type="text"
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              autoFocus
             />
-            {editingId === task.id ? (
-              <>
-                <input
-                  type="text"
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                  autoFocus
-                />
-                <button onClick={handleSave}>Save</button>
-                <button onClick={() => setEditingId(null)}>Cancel</button>
-              </>
-            ) : (
-              <>
-                <span>{task.title}</span>
-                <button onClick={() => editTask(task.id)}>Edit</button>
-                <button onClick={() => removeTask(task.id)}>Delete</button>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
+            <button onClick={handleSave}>Save</button>
+            <button onClick={() => setEditingId(null)}>Cancel</button>
+          </>
+        ) : (
+          <>
+            <span>{task.title}</span>
+            <button onClick={() => editTask(task.id)}>Edit</button>
+            <button onClick={() => removeTask(task.id)}>Delete</button>
+          </>
+        )}
+      </li>
+    ))
+  )}
+</ul>
     </div>
   );
 }
