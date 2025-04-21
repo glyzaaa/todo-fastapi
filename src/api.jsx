@@ -5,7 +5,8 @@ export const getTodos = async (completed) => {
   if (completed !== undefined) url += `?completed=${completed}`;
   const response = await fetch(url);
   if (!response.ok) throw new Error("Failed to fetch todos");
-  return response.json();
+  const data = await response.json();
+  return Array.isArray(data) ? data : [];
 };
 
 export const createTodo = async (title) => {

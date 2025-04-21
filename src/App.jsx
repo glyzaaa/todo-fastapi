@@ -23,15 +23,20 @@ function App() {
         let completed;
         if (filter === "completed") completed = true;
         else if (filter === "pending") completed = false;
+        else completed = undefined;
         const data = await getTodos(completed);
-        setTodos(Array.isArray(data) ? data : []);
+        if (Array.isArray(data)) {
+          setTodos(data);
+        } else {
+          console.error("Fetched data is not an array:", data);
+          setTodos([]);
+        }
       } catch (error) {
         console.error(error);
-        setTodos([]);
       } finally {
         setIsLoading(false);
       }
-    };
+    };    
     fetchTodos();
   }, [filter]);
 
