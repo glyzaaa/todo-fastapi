@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import TodoList from "./components/TodoList";
 import AddTodo from "./components/AddTodo";
 import FilterButtons from "./components/FilterButtons";
+import axios from "axios";
 import { getTodos } from "./api";
 import "./App.css";
 
@@ -25,18 +26,13 @@ function App() {
         else if (filter === "pending") completed = false;
         else completed = undefined;
         const data = await getTodos(completed);
-        if (Array.isArray(data)) {
-          setTodos(data);
-        } else {
-          console.error("Fetched data is not an array:", data);
-          setTodos([]);
-        }
+        setTodos(data);
       } catch (error) {
         console.error(error);
       } finally {
         setIsLoading(false);
       }
-    };    
+    };
     fetchTodos();
   }, [filter]);
 
