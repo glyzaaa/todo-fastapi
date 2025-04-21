@@ -1,9 +1,11 @@
 const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onrender.com";
 
 export const getTodos = async (completed) => {
-  let url = `${API_URL}/todos`; 
-  if (completed !== undefined) url += `?completed=${completed}`;
-  
+  let url = `${API_URL}/todos`;
+  if (typeof completed === "boolean") {
+    url += `?completed=${completed}`;
+  }
+
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -12,17 +14,17 @@ export const getTodos = async (completed) => {
     }
     return await response.json();
   } catch (error) {
-    console.error("Error fetching todos:", error);
+    console.error("Error fetching todos:", error.message || error);
     throw error;
   }
 };
 
 export const createTodo = async (title) => {
   try {
-    const response = await fetch(`${API_URL}/todos`, { 
+    const response = await fetch(`${API_URL}/todos`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, completed: false }), // ✅ this is the fix
+      body: JSON.stringify({ title, completed: false }),
     });
 
     if (!response.ok) {
@@ -32,14 +34,14 @@ export const createTodo = async (title) => {
 
     return await response.json();
   } catch (error) {
-    console.error("Error in createTodo:", error);
-    throw error; 
+    console.error("Error in createTodo:", error.message || error);
+    throw error;
   }
 };
 
 export const updateTodo = async (id, updates) => {
   try {
-    const response = await fetch(`${API_URL}/todos/${id}`, { 
+    const response = await fetch(`${API_URL}/todos/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updates),
@@ -52,14 +54,16 @@ export const updateTodo = async (id, updates) => {
 
     return await response.json();
   } catch (error) {
-    console.error("Error updating todo:", error);
-    throw error; 
+    console.error("Error updating todo:", error.message || error);
+    throw error;
   }
 };
 
 export const deleteTodo = async (id) => {
   try {
-    const response = await fetch(`${API_URL}/todos/${id}`, { method: "DELETE" }); 
+    const response = await fetch(`${API_URL}/todos/${id}`, {
+      method: "DELETE",
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -68,7 +72,7 @@ export const deleteTodo = async (id) => {
 
     return await response.json();
   } catch (error) {
-    console.error("Error deleting todo:", error);
-    throw error; 
+    console.error("Error deleting todo:", error.message || error);
+    throw error;
   }
 };
