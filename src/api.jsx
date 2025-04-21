@@ -1,28 +1,35 @@
-
-import axios from "axios";
-
-const API_URL = "https://todo-fastapi-sjxd.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onrender.com",
 
 export const getTodos = async (completed) => {
-  let url = API_URL;
-  if (completed !== undefined) {
-    url = `${API_URL}/filter/status/${completed}`;
-  }
-  const response = await axios.get(url);
-  return response.data;
+  let url = ${API_URL}/todos;
+  if (completed !== undefined) url += ?completed=${completed};
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Failed to fetch todos");
+  return response.json();
 };
 
-export const createTodo = async (task) => {
-  const response = await axios.post(API_URL, { task });
-  return response.data;
+export const createTodo = async (title) => {
+  const response = await fetch(${API_URL}/todos, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title }),
+  });
+  if (!response.ok) throw new Error("Failed to create todo");
+  return response.json();
+};
+
+export const updateTodo = async (id, updates) => {
+  const response = await fetch(${API_URL}/todos/${id}, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updates),
+  });
+  if (!response.ok) throw new Error("Failed to update todo");
+  return response.json();
 };
 
 export const deleteTodo = async (id) => {
-  const response = await axios.delete(`${API_URL}/${id}`);
-  return response.data;
-};
-
-export const updateTodo = async (id, updatedTask) => {
-  const response = await axios.put(`${API_URL}/${id}`, updatedTask);
-  return response.data;
+  const response = await fetch(${API_URL}/todos/${id}, { method: "DELETE" });
+  if (!response.ok) throw new Error("Failed to delete todo");
+  return response.json();
 };
