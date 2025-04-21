@@ -10,6 +10,7 @@ app = FastAPI()
 
 origins = [
     "https://glyzaaa.github.io",  
+]
 
 app.add_middleware(
     CORSMiddleware,
