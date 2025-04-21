@@ -40,7 +40,7 @@ function TodoItem({ todo, onUpdate, onDelete }) {
   };
 
   return (
-    <div className={todo-item ${isLoading ? "loading" : ""}}>
+    <div className={`todo-item ${isLoading ? "loading" : ""}`}>
       <input
         type="checkbox"
         checked={todo.completed}

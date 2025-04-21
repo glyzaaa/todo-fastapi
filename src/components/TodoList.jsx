@@ -4,9 +4,15 @@ import TodoItem from "./TodoItem";
 function TodoList({ todos, onUpdate, onDelete }) {
   return (
     <ul>
-      {todos.map((todo) => (
-        <TodoItem key={todo.id} todo={todo} onUpdate={onUpdate} onDelete={onDelete} />
-      ))}
+      {Array.isArray(todos) ? (
+        todos.map((todo) => (
+          <li key={todo.id}>
+            <TodoItem todo={todo} onUpdate={onUpdate} onDelete={onDelete} />
+          </li>
+        ))
+      ) : (
+        <li>No todos to show</li>
+      )}
     </ul>
   );
 }

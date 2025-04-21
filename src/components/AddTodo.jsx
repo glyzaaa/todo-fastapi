@@ -15,9 +15,7 @@ function AddTodo({ onAdd }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Optional label for accessibility */}
       <label htmlFor="todo-title" className="sr-only">Todo</label>
-
       <input
         id="todo-title"
         name="title"
@@ -25,7 +23,6 @@ function AddTodo({ onAdd }) {
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Add a new todo"
       />
-
       <button type="submit">Add</button>
     </form>
   );

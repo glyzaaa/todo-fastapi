@@ -23,11 +23,11 @@ function App() {
         let completed;
         if (filter === "completed") completed = true;
         else if (filter === "pending") completed = false;
-        else completed = undefined;
         const data = await getTodos(completed);
-        setTodos(data);
+        setTodos(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error(error);
+        setTodos([]);
       } finally {
         setIsLoading(false);
       }
