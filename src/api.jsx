@@ -1,5 +1,5 @@
 
-const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-fw5b.onrender.com/todos";
+const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onrender.com/todos/";
 
 export const getTodos = async (completed) => {
   let url = `${API_URL}/todos`;
