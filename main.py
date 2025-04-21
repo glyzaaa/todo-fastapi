@@ -12,7 +12,7 @@ app = FastAPI()
 
 # CORS settings
 origins = [
-    "https://glyzaaa.github.io/todo-fastapi/",  # Make sure your frontend domain is listed
+    "https://glyzaaa.github.io",  # Make sure your frontend domain is listed
 ]
 
 app.add_middleware(
