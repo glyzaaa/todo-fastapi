@@ -3,7 +3,7 @@ import axios from "axios";
 import "./App.css";
 
 // Use environment variable for API URL
-const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onrender.com/todos/";
+const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onrender.com";
 
 export default function TodoList() {
   const [tasks, setTasks] = useState([]);
@@ -16,7 +16,8 @@ export default function TodoList() {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get(API_URL);
+        // Fetch tasks
+const response = await axios.get(`${API_URL}/todos`);
         console.log('Fetched tasks:', response.data);  // Check if data is fetched correctly
         setTasks(response.data);
       } catch (error) {
@@ -40,7 +41,7 @@ export default function TodoList() {
     if (task.trim() === "") return;
     try {
       const newTask = { title: task, completed: false };
-      const response = await axios.post(API_URL, newTask);
+      const response = await axios.post(`${API_URL}/todos`, newTask);
       setTasks([...tasks, response.data]);
       setTask("");
     } catch (error) {

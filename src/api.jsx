@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onrender.com/todos/";
+const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onrender.com";
 
 // Fetch all todos with an optional filter for completion status
 export const getTodos = async (completed) => {
