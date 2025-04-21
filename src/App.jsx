@@ -12,6 +12,14 @@ function App() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const [isLoading, setIsLoading] = useState(false);
 
+axios.get(BASE_URL).then(res => console.log(res.data));
+
+axios.post(BASE_URL, {
+  title: "New Task",
+  description: "Something to do",
+  completed: false,
+});
+
   useEffect(() => {
     document.body.className = theme;
     localStorage.setItem("theme", theme);
