@@ -1,162 +1,172 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import "./App.css";
-import TodoList from "./TodoList";
+import React, { useState, useEffect } from 'react';
+import './App.css';
 
-// Use the correct base URL (with /todos/ at the end)
-const API_URL = "https://todo-fastapi-sjxd.onrender.com";
+const TaskItem = ({ task, onEdit, onRemove, onToggleComplete }) => {
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case 'high':
+        return 'red';
+      case 'medium':
+        return 'yellow';
+      case 'low':
+        return 'green';
+      default:
+        return 'gray';
+    }
+  };
 
-export default function TodoList() {
-  const [tasks, setTasks] = useState([]);
-  const [task, setTask] = useState("");
-  const [editingId, setEditingId] = useState(null);
-  const [editText, setEditText] = useState("");
-  const [filter, setFilter] = useState("All");
-  const [darkMode, setDarkMode] = useState(localStorage.getItem("theme") === "dark");
+  return (
+    <li className={`task-item ${task.completed ? 'completed' : ''}`}>
+      <div className="task-content">
+        <input
+          type="checkbox"
+          checked={task.completed}
+          onChange={(e) => onToggleComplete(task.id, e.target.checked)}
+        />
+        <div className="task-details">
+          <span>{task.title}</span>
+          <small>Priority: {task.priority} | Deadline: {task.deadline}</small>
+          <p>{task.comments}</p>
+        </div>
+        <div className="task-actions">
+          <button className="edit-btn" onClick={() => onEdit(task)}>✏️</button>
+          <button className="delete-btn" onClick={() => onRemove(task.id)}>🗑️</button>
+        </div>
+      </div>
+      <div className="priority-indicator" style={{ backgroundColor: getPriorityColor(task.priority) }}></div>
+    </li>
+  );
+};
+
+export default function TodoList({ tasks, onAdd, onUpdate, onDelete }) {
+  const [filter, setFilter] = useState('all');
+  const [darkMode, setDarkMode] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [newTask, setNewTask] = useState({ title: '', priority: '', deadline: '', comments: '', completed: false });
+  const [editingTaskId, setEditingTaskId] = useState(null);
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await axios.get(API_URL);
-        setTasks(response.data);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-      }
-    };
-    fetchTasks();
-  }, []);
-
-  useEffect(() => {
-    document.body.classList.toggle("dark", darkMode);
-    localStorage.setItem("theme", darkMode ? "dark" : "light");
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
   }, [darkMode]);
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
+  const handleAddOrEditTask = () => {
+    if (newTask.title.trim() === '') return;
+
+    if (editingTaskId) {
+      onUpdate(editingTaskId, newTask);
+    } else {
+      onAdd(newTask);
+    }
+    setNewTask({ title: '', priority: '', deadline: '', comments: '', completed: false });
+    setEditingTaskId(null);
+    setShowPopup(false);
   };
 
-  const addTask = async () => {
-    if (task.trim() === "") return;
-    try {
-      const newTask = { title: task, completed: false };
-      const response = await axios.post(API_URL, newTask);
-      setTasks([...tasks, response.data]);
-      setTask("");
-    } catch (error) {
-      console.error("Error adding task:", error);
-    }
+  const handleDeleteTask = (taskId) => {
+    onDelete(taskId);
   };
 
-  const removeTask = async (id) => {
-    try {
-      await axios.delete(`${API_URL}${id}`);
-      setTasks(tasks.filter((task) => task.id !== id));
-    } catch (error) {
-      console.error("Error deleting task:", error);
-    }
-  };
-
-  const editTask = (id) => {
-    const taskToEdit = tasks.find((task) => task.id === id);
-    if (taskToEdit) {
-      setEditingId(id);
-      setEditText(taskToEdit.title);
-    }
-  };
-
-  const handleSave = async () => {
-    if (editText.trim() === "") return;
-    try {
-      const updatedTask = { title: editText };
-      await axios.put(`${API_URL}${editingId}`, updatedTask);
-      setTasks(
-        tasks.map((task) =>
-          task.id === editingId ? { ...task, title: editText } : task
-        )
-      );
-      setEditingId(null);
-    } catch (error) {
-      console.error("Error updating task:", error);
-    }
-  };
-
-  const toggleCompletion = async (id) => {
-    const taskToToggle = tasks.find((task) => task.id === id);
-    if (taskToToggle) {
-      try {
-        const updatedTask = { completed: !taskToToggle.completed };
-        await axios.put(`${API_URL}${id}`, updatedTask);
-        setTasks(
-          tasks.map((task) =>
-            task.id === id ? { ...task, completed: !task.completed } : task
-          )
-        );
-      } catch (error) {
-        console.error("Error toggling task completion:", error);
-      }
-    }
+  const handleToggleComplete = (taskId, completed) => {
+    const taskToUpdate = tasks.find((task) => task.id === taskId);
+    if (!taskToUpdate) return;
+    const updatedTask = { ...taskToUpdate, completed };
+    onUpdate(taskId, updatedTask);
   };
 
   const filteredTasks = tasks.filter((task) => {
-    if (filter === "Completed") return task.completed;
-    if (filter === "Pending") return !task.completed;
+    if (filter === 'completed') return task.completed;
+    if (filter === 'pending') return !task.completed;
     return true;
   });
 
   return (
-    <div className="app">
-      <div className="header">
-        <h2>To-Do List</h2>
-        <button className="dark-mode-toggle" onClick={toggleDarkMode}>
-          {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-        </button>
-      </div>
+    <div className="todo-container" style={{ boxShadow: darkMode ? 'var(--dark-box-shadow)' : 'var(--light-box-shadow)' }}>
+      <div className="task-container">
+        <h2>✅ Manage Your Tasks</h2>
+        <div className="header">
+          <button className="add-task" onClick={() => setShowPopup(true)}>➕ Add Task</button>
+          <button className="toggle-darkmode" onClick={() => setDarkMode(!darkMode)}>
+            {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+          </button>
+        </div>
 
-      <div className="task-input">
-        <input
-          type="text"
-          placeholder="Add a new task..."
-          value={task}
-          onChange={(e) => setTask(e.target.value)}
-        />
-        <button onClick={addTask}>Add Task</button>
-      </div>
-
-      <div className="filter-buttons">
-        <button onClick={() => setFilter("All")}>All</button>
-        <button onClick={() => setFilter("Completed")}>Completed</button>
-        <button onClick={() => setFilter("Pending")}>Pending</button>
-      </div>
-
-      <ul className="task-list">
-        {filteredTasks.map((task) => (
-          <li key={task.id} className={`task-item ${task.completed ? "completed" : ""}`}>
-            <input
-              type="checkbox"
-              checked={task.completed}
-              onChange={() => toggleCompletion(task.id)}
-            />
-            {editingId === task.id ? (
-              <>
+        {showPopup && (
+          <div className="popup">
+            <div className="popup-content">
+              <h3>Task Details</h3>
+              <div className="input-group">
+                <label htmlFor="task-title">Title</label>
                 <input
+                  id="task-title"
                   type="text"
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                  autoFocus
+                  placeholder="Add a task title"
+                  value={newTask.title}
+                  onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
                 />
-                <button onClick={handleSave}>Save</button>
-                <button onClick={() => setEditingId(null)}>Cancel</button>
-              </>
-            ) : (
-              <>
-                <span>{task.title}</span>
-                <button onClick={() => editTask(task.id)}>Edit</button>
-                <button onClick={() => removeTask(task.id)}>Delete</button>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
+              </div>
+              <div className="input-row">
+                <div className="input-group">
+                  <label htmlFor="task-priority">Priority</label>
+                  <select
+                    id="task-priority"
+                    value={newTask.priority}
+                    onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
+                  >
+                    <option value="">Select priority</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </div>
+                <div className="input-group">
+                  <label htmlFor="task-deadline">Deadline</label>
+                  <input
+                    id="task-deadline"
+                    type="date"
+                    value={newTask.deadline || ''}
+                    onChange={(e) => setNewTask({ ...newTask, deadline: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div className="input-group">
+                <label htmlFor="task-comments">Comments</label>
+                <textarea
+                  id="task-comments"
+                  placeholder="Add any comments to your task"
+                  value={newTask.comments}
+                  onChange={(e) => setNewTask({ ...newTask, comments: e.target.value })}
+                />
+              </div>
+              <div className="popup-buttons">
+                <button className="close-btn" onClick={() => setShowPopup(false)}>Close</button>
+                <button className="add-btn" onClick={handleAddOrEditTask}>
+                  {editingTaskId ? 'Save Changes' : 'Add Task'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="filters">
+          <button className="filter-btn" onClick={() => setFilter('all')}>All</button>
+          <button className="filter-btn" onClick={() => setFilter('completed')}>Completed</button>
+          <button className="filter-btn" onClick={() => setFilter('pending')}>Pending</button>
+        </div>
+        <ul>
+          {filteredTasks.map((task) => (
+            <TaskItem
+              key={task.id}
+              task={task}
+              onEdit={(task) => {
+                setNewTask(task);
+                setEditingTaskId(task.id);
+                setShowPopup(true);
+              }}
+              onRemove={handleDeleteTask}
+              onToggleComplete={handleToggleComplete}
+            />
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
