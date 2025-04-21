@@ -41,23 +41,41 @@ function TodoItem({ todo, onUpdate, onDelete }) {
 
   return (
     <div className={`todo-item ${isLoading ? "loading" : ""}`}>
+      {/* Checkbox for completion with unique id and name */}
+      <label htmlFor={`todo-check-${todo.id}`} className="sr-only">
+        Mark as {todo.completed ? "incomplete" : "completed"}
+      </label>
       <input
+        id={`todo-check-${todo.id}`}  // Unique id
+        name={`todo-check-${todo.id}`} // Unique name
         type="checkbox"
         checked={todo.completed}
         onChange={handleToggleComplete}
         disabled={isLoading}
       />
+
+      {/* Input field for editing the title with unique id and name */}
       {isEditing ? (
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          onBlur={handleSave}
-          autoFocus
-          disabled={isLoading}
-        />
+        <>
+          <label htmlFor={`edit-title-${todo.id}`} className="sr-only">
+            Edit title
+          </label>
+          <input
+            id={`edit-title-${todo.id}`}  // Unique id
+            name={`edit-title-${todo.id}`} // Unique name
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            onBlur={handleSave}
+            autoFocus
+            disabled={isLoading}
+          />
+        </>
       ) : (
         <span onClick={() => setIsEditing(true)}>{todo.title}</span>
       )}
+
+      {/* Delete button with loading state */}
       <button onClick={handleDelete} disabled={isLoading}>
         {isLoading ? "Deleting..." : "Delete"}
       </button>
