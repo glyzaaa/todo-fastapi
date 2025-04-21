@@ -2,30 +2,28 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import todo
 from database import Base, engine
+import os
 
-# Initialize FastAPI app
+Fetch the PostgreSQL connection URL from environment variables
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+Initialize FastAPI app
 app = FastAPI()
 
-# CORS settings - allow frontend to access backend
+CORS settings
 origins = [
-    "https://glyzaaa.github.io",
-]
+    "https://glyzaaa.github.io",  
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Allow only your frontend domain
+    allow_origins=origins,  # Allow frontend origin
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all methods
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=[""],  # Allow all HTTP methods (GET, POST, PUT, DELETE)
+    allow_headers=[""],  # Allow all headers
 )
 
-# Create the database tables
+Create the database tables based on the models
 Base.metadata.create_all(bind=engine)
 
-# Include the ToDo routes with a prefix
+Include the router for todos
 app.include_router(todo.router, prefix="/todos", tags=["ToDos"])
-
-# Optional root route (helps avoid 404/CORS errors on "/")
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to the ToDo API"}
