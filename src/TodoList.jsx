@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 
-
-const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onrender.com/todos/";
+// Use the correct base URL (with /todos/ at the end)
+const API_URL = "https://todo-fastapi-sjxd.onrender.com/todos/";
 
 export default function TodoList() {
   const [tasks, setTasks] = useState([]);
@@ -48,7 +48,7 @@ export default function TodoList() {
 
   const removeTask = async (id) => {
     try {
-      await axios.delete(`${API_URL}${id}/`);
+      await axios.delete(`${API_URL}${id}`);
       setTasks(tasks.filter((task) => task.id !== id));
     } catch (error) {
       console.error("Error deleting task:", error);
@@ -67,7 +67,7 @@ export default function TodoList() {
     if (editText.trim() === "") return;
     try {
       const updatedTask = { title: editText };
-      await axios.patch(`${API_URL}${editingId}/`, updatedTask);
+      await axios.put(`${API_URL}${editingId}`, updatedTask);
       setTasks(
         tasks.map((task) =>
           task.id === editingId ? { ...task, title: editText } : task
@@ -84,7 +84,7 @@ export default function TodoList() {
     if (taskToToggle) {
       try {
         const updatedTask = { completed: !taskToToggle.completed };
-        await axios.patch(`${API_URL}${id}/`, updatedTask);
+        await axios.put(`${API_URL}${id}`, updatedTask);
         setTasks(
           tasks.map((task) =>
             task.id === id ? { ...task, completed: !task.completed } : task
