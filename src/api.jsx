@@ -22,7 +22,7 @@ export const createTodo = async (title) => {
     const response = await fetch(`${API_URL}/todos`, { 
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title }),
+      body: JSON.stringify({ title, completed: false }), // ✅ this is the fix
     });
 
     if (!response.ok) {
