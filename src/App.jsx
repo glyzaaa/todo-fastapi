@@ -37,7 +37,7 @@ function App() {
   }, [filter]);
 
   return (
-    <div className="app">
+    <div className={`app ${theme}`}>
       <ThemeToggle theme={theme} setTheme={setTheme} /> 
 
       <h1>To-Do List</h1>

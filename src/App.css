@@ -1,3 +1,4 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -5,14 +6,14 @@
   text-align: center;
 }
 
-body.light {
-  background-color: #f4f4f4;
-  color: #111;
+.app.light {
+  background-color: #eafaf1;
+  color: #0b3d2e;
 }
 
-body.dark {
-  background-color: #121212;
-  color: #fff;
+.app.dark {
+  background-color: #0b3d2e;
+  color: #eafaf1;
 }
 
 .theme-toggle {
@@ -23,38 +24,41 @@ body.dark {
   color: inherit;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.theme-toggle:hover {
+  background-color: rgba(0, 128, 0, 0.1);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+input,
+button {
+  font-family: inherit;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+input {
+  padding: 0.5rem;
+  margin: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.app.dark input {
+  background-color: #133f33;
+  color: #eafaf1;
+  border: 1px solid #2e7d58;
+}
+
+.app.light input {
+  background-color: #ffffff;
+  color: #0b3d2e;
+  border: 1px solid #ccc;
 }
 
 .card {
   padding: 2em;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
 }
 
 .read-the-docs {
