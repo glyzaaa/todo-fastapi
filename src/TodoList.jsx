@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 
-
-const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onrender.com";
+// Use environment variable for API URL
+const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onrender.com/todos/";
 
 export default function TodoList() {
   const [tasks, setTasks] = useState([]);
@@ -17,6 +17,7 @@ export default function TodoList() {
     const fetchTasks = async () => {
       try {
         const response = await axios.get(API_URL);
+        console.log('Fetched tasks:', response.data); // Add logging to debug
         setTasks(response.data);
       } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -38,13 +39,13 @@ export default function TodoList() {
     if (task.trim() === "") return;
     try {
       const newTask = { title: task, completed: false };
-      const response = await axios.post(`${API_URL}/todos/`, newTask);
-      setTasks([...tasks, response.data]);  // Adding the new task to the state
-      setTask("");  // Resetting input field after adding the task
+      const response = await axios.post(API_URL, newTask);
+      setTasks([...tasks, response.data]);
+      setTask("");
     } catch (error) {
       console.error("Error adding task:", error);
     }
-  };  
+  };
 
   const removeTask = async (id) => {
     try {
