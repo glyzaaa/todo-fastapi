@@ -1,8 +1,7 @@
-
-const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onrender.com/todos/";
+const API_URL = import.meta.env.VITE_API_URL || "https://todo-fastapi-sjxd.onrender.com"; // remove /todos here
 
 export const getTodos = async (completed) => {
-  let url = `${API_URL}/todos`;
+  let url = `${API_URL}/todos`; // append /todos here
   if (completed !== undefined) url += `?completed=${completed}`;
   
   try {
@@ -18,10 +17,9 @@ export const getTodos = async (completed) => {
   }
 };
 
-
 export const createTodo = async (title) => {
   try {
-    const response = await fetch(`${API_URL}/todos`, {
+    const response = await fetch(`${API_URL}/todos`, { // append /todos here
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title }),
@@ -41,7 +39,7 @@ export const createTodo = async (title) => {
 
 export const updateTodo = async (id, updates) => {
   try {
-    const response = await fetch(`${API_URL}/todos/${id}`, {
+    const response = await fetch(`${API_URL}/todos/${id}`, { // append /todos here
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updates),
@@ -59,10 +57,9 @@ export const updateTodo = async (id, updates) => {
   }
 };
 
-// Delete a todo
 export const deleteTodo = async (id) => {
   try {
-    const response = await fetch(`${API_URL}/todos/${id}`, { method: "DELETE" });
+    const response = await fetch(`${API_URL}/todos/${id}`, { method: "DELETE" }); // append /todos here
 
     if (!response.ok) {
       const errorText = await response.text();
