@@ -4,7 +4,7 @@ import TodoList from "./TodoList";
 
 function App() {
   const [tasks, setTasks] = useState([]);
-  const API_URL = "https://todo-fastapi-sjxd.onrender.com";
+  const API_URL = "https://todo-fastapi-sjxd.onrender.com/";
 
   // Fetch tasks from the backend
   useEffect(() => {
@@ -32,7 +32,7 @@ function App() {
   // Update an existing task
   const updateTask = async (id, updatedTask) => {
     try {
-      const response = await axios.put(${API_URL}${id}/, updatedTask);
+      const response = await axios.put(`${API_URL}${id}/`, updatedTask);
       setTasks((prevTasks) =>
         prevTasks.map((task) => (task.id === id ? response.data : task))
       );
@@ -44,7 +44,7 @@ function App() {
   // Delete a task
   const deleteTask = async (id) => {
     try {
-      await axios.delete(${API_URL}${id}/);
+      await axios.delete(`${API_URL}${id}/`);
       setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
     } catch (error) {
       console.error("Error deleting task:", error.message);
